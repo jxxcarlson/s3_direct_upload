@@ -47,6 +47,17 @@ defmodule S3DirectUpload do
 
   @expiration Application.get_env(:s3_direct_upload, :expiration_api, S3DirectUpload.Expiration)
 
+  def utc_now do
+     dt = DateTime.utc_now()
+     y = dt.year
+     m = dt.month |> Integer.to_string |> String.pad_leading(2, "0")
+     d = dt.day |> Integer.to_string |> String.pad_leading(2, "0")
+     ho = dt.hour |> Integer.to_string |> String.pad_leading(2, "0")
+     mi = dt.minute |> Integer.to_string |> String.pad_leading(2, "0")
+     se = dt.second |> Integer.to_string |> String.pad_leading(2, "0")
+     Enum.join [y,m,d,"T",ho,mi,se,"Z"], ""
+  end
+
   @doc """
 
   Returns a map with `url` and `credentials` keys.
@@ -73,6 +84,7 @@ defmodule S3DirectUpload do
 
   """
   def presigned(%S3DirectUpload{} = upload) do
+    date = utc_now()
     %{
       url: "https://#{upload.bucket}.s3.amazonaws.com",
       credentials: %{
@@ -80,10 +92,16 @@ defmodule S3DirectUpload do
         signature: signature(upload),
         policy: policy(upload),
         acl: upload.acl,
-        key: "#{upload.path}/#{upload.file_name}"
+        key: "#{upload.path}/#{upload.file_name}",
+        date: date,
+        amz_credential: "#{upload.access_key}/#{date}/us-east-1/s3/aws4_request"
       }
     }
   end
+
+
+
+
 
   @doc """
 
