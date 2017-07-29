@@ -94,7 +94,7 @@ defmodule S3DirectUpload do
         acl: upload.acl,
         key: "#{upload.path}/#{upload.file_name}",
         date: date,
-        amz_credential: "#{upload.access_key}/#{date}/us-east-1/s3/aws4_request"
+        credential: "#{upload.access_key}/#{date}/us-east-1/s3/aws4_request"
       }
     }
   end
