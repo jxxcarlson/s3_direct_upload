@@ -48,15 +48,15 @@ defmodule S3DirectUpload do
   @expiration Application.get_env(:s3_direct_upload, :expiration_api, S3DirectUpload.Expiration)
 
   def utc_now do
-     dt = DateTime.utc_now()
+     dt = DateTime.utc_now() # |> DateTime.to_iso8601()
      y = dt.year
      m = dt.month |> Integer.to_string |> String.pad_leading(2, "0")
      d = dt.day |> Integer.to_string |> String.pad_leading(2, "0")
-    #  ho = dt.hour |> Integer.to_string |> String.pad_leading(2, "0")
-    #  mi = dt.minute |> Integer.to_string |> String.pad_leading(2, "0")
-    #  se = dt.second |> Integer.to_string |> String.pad_leading(2, "0")
-     # Enum.join [y,m,d,"T",ho,mi,se,"Z"], ""
-     Enum.join [y,m,d], ""
+     ho = dt.hour |> Integer.to_string |> String.pad_leading(2, "0")
+     mi = dt.minute |> Integer.to_string |> String.pad_leading(2, "0")
+     se = dt.second |> Integer.to_string |> String.pad_leading(2, "0")
+     Enum.join [y,m,d,"T",ho,mi,se,"Z"], ""
+    #  Enum.join [y,m,d], ""
   end
 
   @doc """
